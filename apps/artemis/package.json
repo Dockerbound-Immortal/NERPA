@@ -1,0 +1,20 @@
+{
+  "name": "artemis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Luke McCann <developer-lukemccann@outlook.com>",
+  "description": "", 
+  "scripts": {
+    "install:server": "cd api && yarn install", 
+    "install:client": "cd client && yarn install",
+    "install": "yarn install:server && yarn install:client",
+    "start:server-dev": "cd api && yarn start:dev",
+    "start:client": "cd client && yarn start",
+    "start:dev": "yarn start:server-dev && yarn start:client",
+    "start:server": "cd api && yarn start",
+    "build:client": "cd client && yarn build", 
+    "deploy": "yarn build:client && yarn start:server",
+    "start": "yarn start:server & yarn start:client"
+  }
+}
