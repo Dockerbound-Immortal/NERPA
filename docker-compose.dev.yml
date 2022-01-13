@@ -1,0 +1,98 @@
+version: '3.8'
+
+networks:
+  microservice-network:
+    driver: bridge
+  artemis-network:
+    driver: bridge
+  frontend-network:
+    driver: bridge
+  backend-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+
+volumes: 
+  artemis-data:
+
+services: 
+
+  # Artemis
+  artemis-client:
+    build: 
+      context: ./apps/artemis/client
+      dockerfile: Dockerfile.dev
+    container_name: artemis-client
+    volumes: 
+      - ./apps/artemis/client/src:/usr/app/src
+    tty: true
+    stdin_open: true 
+    environment: 
+      PORT: "3000"
+      CHOKIDAR_USEPOLLING: "true"
+    networks:
+      - microservice-network
+      - artemis-network
+      - frontend-network
+
+  artemis-api:
+    build: 
+      context: ./apps/artemis/api
+      dockerfile: Dockerfile.dev
+    container_name: artemis-api
+    volumes:
+      - ./apps/artemis/api/src:/usr/app/src
+    environment:
+      PORT: "4000"
+      CHOKIDAR_USEPOLLING: "true"
+    networks: 
+      - microservice-network
+      - artemis-network 
+      - backend-network
+
+  artemis-db: 
+    image: postgres:14.1
+    restart: unless-stopped
+    tty: true 
+    container_name: artemis-db
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: artemis-db
+    volumes: 
+      - artemis-data:/var/lib/postgresql/data
+      - ./infrastructure/db/init:/docker-entrypoint-initdb.d/
+    networks: 
+      - artemis-network
+      - db-network
+
+  # Application Gateway
+  nginx-gateway:
+    image: nginx:1.21.5-alpine
+    container_name: nginx-gateway
+    ports: 
+      - "8080:80"
+    volumes: 
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - microservice-network
+
+  adminer: 
+    image: adminer:latest
+    container_name: adminer
+    ports: 
+      - "8081:8080"
+    restart: always
+    depends_on: 
+      - artemis-db
+    networks: 
+      - microservice-network
+      - artemis-network
+      - db-network 
+
+
+
