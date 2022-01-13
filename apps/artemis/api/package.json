@@ -1,0 +1,22 @@
+{
+  "name": "artemis-api",
+  "version": "1.0.0",
+  "main": "src/server.mjs",
+  "license": "MIT",
+  "author": "Luke McCann <developer-lukemccann@outlook.com>",
+  "description": "",
+  "scripts": {
+    "start:dev": "nodemon src/server.mjs",
+    "start": "node src/server.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parse": "^5.0.4",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0",
+    "normalize-port": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
