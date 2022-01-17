@@ -1,3 +1,11 @@
+# Forewarn
+
+This repository is deprecated, this stack will be being split out into multiple docker-compose files for each network.
+You may still use this for a quick devbox setup but it is not recommended for large-scale microservices. 
+
+We will be building a new Microservices architecture using multiple docker-compose files which works with docker-compose
+external networks to join multiple networks together, making our compose files smaller and more manageable. 
+
 # NERPA Microservices
 
 A simplified microservices template for use with docker-compose. 
